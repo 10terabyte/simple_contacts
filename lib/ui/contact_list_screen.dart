@@ -29,7 +29,7 @@ class ContactListScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          // Handle add new contact
+          context.go('/add-contact');
         },
       ),
     );
