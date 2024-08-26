@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../bloc/contact_bloc.dart';
 import '../models/contact.dart';
 
@@ -15,8 +16,14 @@ class ContactDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${contact.firstName} ${contact.lastName}'),
+        title: Text('Contact Details'),
         actions: [
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              context.go('/edit-contact/$contactId');
+            },
+          ),
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
@@ -30,14 +37,55 @@ class ContactDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Phone: ${contact.phoneNumber}', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 10),
-            Text('Address: ${contact.streetAddress1}', style: TextStyle(fontSize: 18)),
-            if (contact.streetAddress2.isNotEmpty)
-              Text('Address Line 2: ${contact.streetAddress2}', style: TextStyle(fontSize: 18)),
-            Text('City: ${contact.city}', style: TextStyle(fontSize: 18)),
-            Text('State: ${contact.state}', style: TextStyle(fontSize: 18)),
-            Text('Zip Code: ${contact.zipCode}', style: TextStyle(fontSize: 18)),
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 40,
+                  child: Text(contact.firstName[0]),
+                ),
+                SizedBox(width: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${contact.firstName} ${contact.lastName}',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    Text(contact.phoneNumber, style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            ListTile(
+              leading: Icon(Icons.phone),
+              title: Text('Call'),
+              onTap: () {
+                // Implement call functionality
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.message),
+              title: Text('Message'),
+              onTap: () {
+                // Implement message functionality
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.email),
+              title: Text('Email'),
+              onTap: () {
+                // Implement email functionality
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.location_on),
+              title: Text('Address'),
+              subtitle: Text('${contact.streetAddress1}, ${contact.city}, ${contact.state}, ${contact.zipCode}'),
+              onTap: () {
+                // Implement address functionality
+              },
+            ),
           ],
         ),
       ),
