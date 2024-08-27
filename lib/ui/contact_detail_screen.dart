@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../bloc/contact_bloc.dart';
+import '../bloc/contact_event.dart';
+import '../models/address.dart';
 import '../models/contact.dart';
-import 'dart:io' show Platform;
+import '../utils/url_launcher_util.dart';
 
 class ContactDetailScreen extends StatelessWidget {
   final int contactId;
 
-  const ContactDetailScreen({super.key, required this.contactId});
+  ContactDetailScreen({required this.contactId});
 
   @override
   Widget build(BuildContext context) {
@@ -18,16 +19,16 @@ class ContactDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contact Details'),
+        title: Text('${contact.firstName} ${contact.lastName}'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit),
+            icon: Icon(Icons.edit),
             onPressed: () {
               context.go('/edit-contact/$contactId');
             },
           ),
           IconButton(
-            icon: const Icon(Icons.delete),
+            icon: Icon(Icons.delete),
             onPressed: () {
               _showDeleteConfirmationDialog(context, contact);
             },
@@ -36,91 +37,85 @@ class ContactDetailScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 40,
-                  child: Text(contact.firstName[0]),
-                ),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${contact.firstName} ${contact.lastName}',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    Text(contact.phoneNumber, style: TextStyle(fontSize: 16)),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            ListTile(
-              leading: const Icon(Icons.phone),
-              title: const Text('Call'),
-              onTap: () async {
-                final phoneNumberUri = Uri(scheme: 'tel', path: contact.phoneNumber);
-                if (!await launchUrl(phoneNumberUri, mode: LaunchMode.externalApplication)) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Could not launch the phone application')),
-                  );
-                }
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.message),
-              title: const Text('Message'),
-              onTap: () async{
-                final phoneNumberUri = Uri(scheme: 'sms', path: contact.phoneNumber);
-                if (!await launchUrl(phoneNumberUri, mode: LaunchMode.externalApplication)) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Could not launch the message application')),
-                  );
-                }
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.email),
-              title: const Text('Email'),
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Coming Soon!!!')),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.location_on),
-              title: const Text('Address'),
-              subtitle: Text('${contact.streetAddress1}, ${contact.city}, ${contact.state}, ${contact.zipCode}'),
-              onTap: () async{
-                final queryString = '${contact.streetAddress1}, ${contact.city}, ${contact.state}, ${contact.zipCode}';
-                final googleMapsUrl = Uri(scheme: 'https', host: 'www.google.com', path: 'maps/search/?api=1&query=$queryString');
-                final appleMapsUrl = Uri(scheme: 'https', host: 'maps.apple.com', path: '?q=$queryString');
-
-                if(Platform.isAndroid){
-                  print(googleMapsUrl);
-                  if (!await launchUrl(googleMapsUrl, mode: LaunchMode.externalNonBrowserApplication)) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Could not launch the maps application')),
-                    );
-                  }
-                }
-                else if(Platform.isIOS){
-                  if (!await launchUrl(appleMapsUrl, mode: LaunchMode.externalApplication)) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Could not launch the maps application')),
-                    );
-                  }
-                }
-              },
-            ),
+            _buildHeader(contact),
+            SizedBox(height: 20),
+            _buildPhoneNumbers(contact.phoneNumbers),
+            _buildAddresses(contact.addresses),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildHeader(Contact contact) {
+    return Row(
+      children: [
+        CircleAvatar(
+          radius: 40,
+          child: Text(contact.firstName[0]),
+        ),
+        SizedBox(width: 16),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${contact.firstName} ${contact.lastName}',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            if (contact.phoneNumbers.isNotEmpty)
+              Text(contact.phoneNumbers[0], style: TextStyle(fontSize: 16)),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPhoneNumbers(List<String> phoneNumbers) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: phoneNumbers.map((phone) {
+        return ListTile(
+          leading: Icon(Icons.phone),
+          title: Text(phone),
+          trailing: Wrap(
+            spacing: 12,
+            children: [
+              IconButton(
+                icon: Icon(Icons.call),
+                onPressed: () {
+                  UrlLauncherUtil.handlePhoneAction('Call', phone);
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.message),
+                onPressed: () {
+                  UrlLauncherUtil.handlePhoneAction('Message', phone);
+                },
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildAddresses(List<Address> addresses) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: addresses.map((address) {
+        return ListTile(
+          leading: Icon(Icons.location_on),
+          title: Text(address.toString()),
+          trailing: IconButton(
+            icon: Icon(Icons.map),
+            onPressed: () {
+              UrlLauncherUtil.handleAddressAction(address.toString());
+            },
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -128,12 +123,12 @@ class ContactDetailScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Contact'),
-        content: const Text('Are you sure you want to delete this contact?'),
+        title: Text('Delete Contact'),
+        content: Text('Are you sure you want to delete this contact?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
@@ -141,7 +136,7 @@ class ContactDetailScreen extends StatelessWidget {
               Navigator.of(context).pop(); // Close the dialog
               Navigator.of(context).pop(); // Go back to the previous screen
             },
-            child: const Text('Delete'),
+            child: Text('Delete'),
           ),
         ],
       ),
