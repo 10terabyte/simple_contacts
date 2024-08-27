@@ -3,110 +3,157 @@
     "id": 1,
     "firstName": "John",
     "lastName": "Doe",
-    "phoneNumber": "123-456-7890",
-    "streetAddress1": "123 Main St",
-    "streetAddress2": "Apt 4B",
-    "city": "New York",
-    "state": "NY",
-    "zipCode": "10001"
+    "phoneNumbers": ["123-456-7890", "098-765-4321"],
+    "addresses": [
+      {
+        "streetAddress1": "123 Main St",
+        "streetAddress2": "Apt 4B",
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "10001"
+      },
+      {
+        "streetAddress1": "456 Maple Ave",
+        "streetAddress2": "",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90001"
+      }
+    ]
   },
   {
     "id": 2,
     "firstName": "Jane",
     "lastName": "Smith",
-    "phoneNumber": "987-654-3210",
-    "streetAddress1": "456 Elm St",
-    "streetAddress2": "",
-    "city": "Los Angeles",
-    "state": "CA",
-    "zipCode": "90001"
+    "phoneNumbers": ["987-654-3210"],
+    "addresses": [
+      {
+        "streetAddress1": "789 Oak St",
+        "streetAddress2": "",
+        "city": "Chicago",
+        "state": "IL",
+        "zipCode": "60601"
+      }
+    ]
   },
   {
     "id": 3,
     "firstName": "Alice",
     "lastName": "Johnson",
-    "phoneNumber": "555-555-5555",
-    "streetAddress1": "789 Oak St",
-    "streetAddress2": "",
-    "city": "Chicago",
-    "state": "IL",
-    "zipCode": "60601"
+    "phoneNumbers": ["555-555-5555"],
+    "addresses": [
+      {
+        "streetAddress1": "101 Birch St",
+        "streetAddress2": "",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77001"
+      }
+    ]
   },
   {
     "id": 4,
     "firstName": "Bob",
     "lastName": "Williams",
-    "phoneNumber": "444-444-4444",
-    "streetAddress1": "101 Maple Ave",
-    "streetAddress2": "Suite 300",
-    "city": "Houston",
-    "state": "TX",
-    "zipCode": "77001"
+    "phoneNumbers": ["444-444-4444", "333-333-3333"],
+    "addresses": [
+      {
+        "streetAddress1": "202 Cedar St",
+        "streetAddress2": "",
+        "city": "Philadelphia",
+        "state": "PA",
+        "zipCode": "19101"
+      }
+    ]
   },
   {
     "id": 5,
     "firstName": "Carol",
     "lastName": "Davis",
-    "phoneNumber": "333-333-3333",
-    "streetAddress1": "202 Birch St",
-    "streetAddress2": "",
-    "city": "Phoenix",
-    "state": "AZ",
-    "zipCode": "85001"
+    "phoneNumbers": ["222-222-2222"],
+    "addresses": [
+      {
+        "streetAddress1": "303 Spruce St",
+        "streetAddress2": "Suite 500",
+        "city": "Phoenix",
+        "state": "AZ",
+        "zipCode": "85001"
+      }
+    ]
   },
   {
     "id": 6,
     "firstName": "David",
     "lastName": "Martinez",
-    "phoneNumber": "222-222-2222",
-    "streetAddress1": "303 Cedar St",
-    "streetAddress2": "Apt 2A",
-    "city": "Philadelphia",
-    "state": "PA",
-    "zipCode": "19101"
+    "phoneNumbers": ["111-111-1111", "666-666-6666"],
+    "addresses": [
+      {
+        "streetAddress1": "404 Pine St",
+        "streetAddress2": "",
+        "city": "San Antonio",
+        "state": "TX",
+        "zipCode": "78201"
+      }
+    ]
   },
   {
     "id": 7,
     "firstName": "Emma",
     "lastName": "Lopez",
-    "phoneNumber": "111-111-1111",
-    "streetAddress1": "404 Pine St",
-    "streetAddress2": "",
-    "city": "San Antonio",
-    "state": "TX",
-    "zipCode": "78201"
+    "phoneNumbers": ["777-777-7777"],
+    "addresses": [
+      {
+        "streetAddress1": "505 Fir St",
+        "streetAddress2": "",
+        "city": "San Diego",
+        "state": "CA",
+        "zipCode": "92101"
+      }
+    ]
   },
   {
     "id": 8,
     "firstName": "Frank",
     "lastName": "Gonzalez",
-    "phoneNumber": "999-999-9999",
-    "streetAddress1": "505 Spruce St",
-    "streetAddress2": "",
-    "city": "San Diego",
-    "state": "CA",
-    "zipCode": "92101"
+    "phoneNumbers": ["888-888-8888", "999-999-9999"],
+    "addresses": [
+      {
+        "streetAddress1": "606 Palm St",
+        "streetAddress2": "Unit 12",
+        "city": "Dallas",
+        "state": "TX",
+        "zipCode": "75201"
+      }
+    ]
   },
   {
     "id": 9,
     "firstName": "Grace",
     "lastName": "Harris",
-    "phoneNumber": "888-888-8888",
-    "streetAddress1": "606 Fir St",
-    "streetAddress2": "",
-    "city": "Dallas",
-    "state": "TX",
-    "zipCode": "75201"
+    "phoneNumbers": ["123-123-1234"],
+    "addresses": [
+      {
+        "streetAddress1": "707 Cypress St",
+        "streetAddress2": "Apt 8C",
+        "city": "San Jose",
+        "state": "CA",
+        "zipCode": "95101"
+      }
+    ]
   },
   {
     "id": 10,
     "firstName": "Henry",
     "lastName": "Clark",
-    "phoneNumber": "777-777-7777",
-    "streetAddress1": "707 Palm St",
-    "streetAddress2": "",
-    "city": "San Jose",
-    "state": "CA",
-    "zipCode": "95101"
+    "phoneNumbers": ["321-321-4321", "654-654-7654"],
+    "addresses": [
+      {
+        "streetAddress1": "808 Walnut St",
+        "streetAddress2": "",
+        "city": "Austin",
+        "state": "TX",
+        "zipCode": "73301"
+      }
+    ]
   }
 ]

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/contact_bloc.dart';
+import 'bloc/contact_event.dart';
 import 'repository/contact_repository.dart';
 import 'router/router.dart';
 

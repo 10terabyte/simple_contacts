@@ -1,42 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/contact.dart';
 import '../repository/contact_repository.dart';
-
-class ContactEvent {}
-
-class LoadContacts extends ContactEvent {}
-
-class AddContact extends ContactEvent {
-  final Contact contact;
-
-  AddContact(this.contact);
-}
-
-class UpdateContact extends ContactEvent {
-  final Contact contact;
-
-  UpdateContact(this.contact);
-}
-
-class DeleteContact extends ContactEvent {
-  final int id;
-
-  DeleteContact(this.id);
-}
-
-class ContactState {
-  final List<Contact> contacts;
-
-  ContactState(this.contacts);
-}
+import 'contact_event.dart';
+import 'contact_state.dart';
 
 class ContactBloc extends Bloc<ContactEvent, ContactState> {
   final ContactRepository repository;
-
+  List<Contact> _allContacts = [];
   ContactBloc(this.repository) : super(ContactState([])) {
     on<LoadContacts>((event, emit) {
-      final contacts = repository.getAllContacts();
-      emit(ContactState(contacts));
+      _allContacts = repository.getAllContacts();
+      emit(ContactState(_allContacts));
     });
 
     on<AddContact>((event, emit) {
@@ -52,6 +26,14 @@ class ContactBloc extends Bloc<ContactEvent, ContactState> {
     on<DeleteContact>((event, emit) {
       repository.deleteContact(event.id);
       add(LoadContacts());
+    });
+    on<SearchContacts>((event, emit) {
+      final query = event.query.toLowerCase();
+      final filteredContacts = _allContacts.where((contact) {
+        return contact.firstName.toLowerCase().contains(query) ||
+            contact.lastName.toLowerCase().contains(query);
+      }).toList();
+      emit(ContactState(filteredContacts));
     });
   }
 }
