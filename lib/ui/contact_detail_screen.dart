@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../bloc/contact_bloc.dart';
 import '../models/contact.dart';
+import 'dart:io' show Platform;
 
 class ContactDetailScreen extends StatelessWidget {
   final int contactId;
 
-  ContactDetailScreen({required this.contactId});
+  const ContactDetailScreen({super.key, required this.contactId});
 
   @override
   Widget build(BuildContext context) {
@@ -16,16 +18,16 @@ class ContactDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Contact Details'),
+        title: const Text('Contact Details'),
         actions: [
           IconButton(
-            icon: Icon(Icons.edit),
+            icon: const Icon(Icons.edit),
             onPressed: () {
               context.go('/edit-contact/$contactId');
             },
           ),
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
             onPressed: () {
               _showDeleteConfirmationDialog(context, contact);
             },
@@ -43,7 +45,7 @@ class ContactDetailScreen extends StatelessWidget {
                   radius: 40,
                   child: Text(contact.firstName[0]),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -56,34 +58,64 @@ class ContactDetailScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ListTile(
-              leading: Icon(Icons.phone),
-              title: Text('Call'),
-              onTap: () {
-                // Implement call functionality
+              leading: const Icon(Icons.phone),
+              title: const Text('Call'),
+              onTap: () async {
+                final phoneNumberUri = Uri(scheme: 'tel', path: contact.phoneNumber);
+                if (!await launchUrl(phoneNumberUri, mode: LaunchMode.externalApplication)) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Could not launch the phone application')),
+                  );
+                }
               },
             ),
             ListTile(
-              leading: Icon(Icons.message),
-              title: Text('Message'),
-              onTap: () {
-                // Implement message functionality
+              leading: const Icon(Icons.message),
+              title: const Text('Message'),
+              onTap: () async{
+                final phoneNumberUri = Uri(scheme: 'sms', path: contact.phoneNumber);
+                if (!await launchUrl(phoneNumberUri, mode: LaunchMode.externalApplication)) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Could not launch the message application')),
+                  );
+                }
               },
             ),
             ListTile(
-              leading: Icon(Icons.email),
-              title: Text('Email'),
+              leading: const Icon(Icons.email),
+              title: const Text('Email'),
               onTap: () {
-                // Implement email functionality
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Coming Soon!!!')),
+                );
               },
             ),
             ListTile(
-              leading: Icon(Icons.location_on),
-              title: Text('Address'),
+              leading: const Icon(Icons.location_on),
+              title: const Text('Address'),
               subtitle: Text('${contact.streetAddress1}, ${contact.city}, ${contact.state}, ${contact.zipCode}'),
-              onTap: () {
-                // Implement address functionality
+              onTap: () async{
+                final queryString = '${contact.streetAddress1}, ${contact.city}, ${contact.state}, ${contact.zipCode}';
+                final googleMapsUrl = Uri(scheme: 'https', host: 'www.google.com', path: 'maps/search/?api=1&query=$queryString');
+                final appleMapsUrl = Uri(scheme: 'https', host: 'maps.apple.com', path: '?q=$queryString');
+
+                if(Platform.isAndroid){
+                  print(googleMapsUrl);
+                  if (!await launchUrl(googleMapsUrl, mode: LaunchMode.externalNonBrowserApplication)) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Could not launch the maps application')),
+                    );
+                  }
+                }
+                else if(Platform.isIOS){
+                  if (!await launchUrl(appleMapsUrl, mode: LaunchMode.externalApplication)) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Could not launch the maps application')),
+                    );
+                  }
+                }
               },
             ),
           ],
@@ -96,12 +128,12 @@ class ContactDetailScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Delete Contact'),
-        content: Text('Are you sure you want to delete this contact?'),
+        title: const Text('Delete Contact'),
+        content: const Text('Are you sure you want to delete this contact?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
@@ -109,7 +141,7 @@ class ContactDetailScreen extends StatelessWidget {
               Navigator.of(context).pop(); // Close the dialog
               Navigator.of(context).pop(); // Go back to the previous screen
             },
-            child: Text('Delete'),
+            child: const Text('Delete'),
           ),
         ],
       ),

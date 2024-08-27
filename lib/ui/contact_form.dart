@@ -39,7 +39,9 @@ class _ContactFormState extends State<ContactForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: ListView(
+      child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: ListView(
         children: <Widget>[
           TextFormField(
             controller: _firstNameController,
@@ -136,7 +138,7 @@ class _ContactFormState extends State<ContactForm> {
             child: Text(widget.contact == null ? 'Create Contact' : 'Save Changes'),
           ),
         ],
-      ),
+      ),),
     );
   }
 }
